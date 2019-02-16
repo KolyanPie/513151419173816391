@@ -1,6 +1,6 @@
 package ru.edu.tetromino.core;
 
-public enum Cells {
+public enum Cell {
     EMPTY,
     WALL,
     FILLED
