@@ -13,9 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Locale;
+
+import ru.edu.tetromino.core.Figure;
 
 public class MainScreen implements Screen {
     private Game game;
@@ -43,7 +44,8 @@ public class MainScreen implements Screen {
         quickMenuStageInitialize();
         otherMenuStageInitialize();
         settingsMenuStageInitialize();
-        backStage = new Stage(new ScreenViewport());
+        backStage = new Stage(new FitViewport(400, 600));
+        backStage();
         stage = mainMenuStage;
         inputMultiplexer = new InputMultiplexer();
         if (!inputMultiplexer.getProcessors().contains(backStage, false)) {
@@ -55,11 +57,24 @@ public class MainScreen implements Screen {
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
+    private void backStage() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (!((int) (Math.random() * 6) == 0)) {
+                    Figure figure = new Figure((byte) (Math.random() * 7), (byte) (Math.random() * 4));
+                    figure.setBounds(i * 100 + (byte) (Math.random() * 30), j * 100 + (byte) (Math.random() * 30), 70);
+                    backStage.addActor(figure);
+                }
+            }
+        }
+    }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backStage.act(delta);
+        backStage.draw();
         stage.act(delta);
         stage.draw();
     }
@@ -99,7 +114,7 @@ public class MainScreen implements Screen {
         mainMenuStage = new Stage(new FitViewport(400, 600));
 
         Button quitButton = new TextButton(languageStrings.get("quit"), skin);
-        quitButton.setBounds(0, 10, 400, 80);
+        quitButton.setBounds(100, 10, 200, 40);
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -107,7 +122,7 @@ public class MainScreen implements Screen {
             }
         });
         Button settingButton = new TextButton(languageStrings.get("settings"), skin);
-        settingButton.setBounds(0, 210, 400, 80);
+        settingButton.setBounds(100, 360, 200, 40);
         settingButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -115,7 +130,7 @@ public class MainScreen implements Screen {
             }
         });
         Button otherButton = new TextButton(languageStrings.get("other"), skin);
-        otherButton.setBounds(0, 310, 400, 80);
+        otherButton.setBounds(100, 410, 200, 40);
         otherButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -123,7 +138,7 @@ public class MainScreen implements Screen {
             }
         });
         Button quickButton = new TextButton(languageStrings.get("quick"), skin);
-        quickButton.setBounds(0, 410, 400, 80);
+        quickButton.setBounds(100, 460, 200, 40);
         quickButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -131,18 +146,18 @@ public class MainScreen implements Screen {
             }
         });
         Button campaignButton = new TextButton(languageStrings.get("campaign"), skin);
-        campaignButton.setBounds(0, 510, 400, 80);
+        campaignButton.setBounds(100, 510, 200, 40);
         campaignButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 changeMenu(campaignMenuStage);
             }
         });
-        ((TextButton) campaignButton).getLabel().setFontScale(0.5f);
-        ((TextButton) quickButton).getLabel().setFontScale(0.5f);
-        ((TextButton) otherButton).getLabel().setFontScale(0.5f);
-        ((TextButton) settingButton).getLabel().setFontScale(0.5f);
-        ((TextButton) quitButton).getLabel().setFontScale(0.5f);
+        ((TextButton) campaignButton).getLabel().setFontScale(0.3f);
+        ((TextButton) quickButton).getLabel().setFontScale(0.3f);
+        ((TextButton) otherButton).getLabel().setFontScale(0.3f);
+        ((TextButton) settingButton).getLabel().setFontScale(0.3f);
+        ((TextButton) quitButton).getLabel().setFontScale(0.3f);
 
         mainMenuStage.addActor(campaignButton);
         mainMenuStage.addActor(quickButton);
@@ -185,15 +200,15 @@ public class MainScreen implements Screen {
     }
 
     private void quickMenuStageInitialize() {
-        campaignMenuStage = new Stage(new FitViewport(400, 600));
+        quickMenuStage = new Stage(new FitViewport(400, 600));
     }
 
     private void otherMenuStageInitialize() {
-        campaignMenuStage = new Stage(new FitViewport(400, 600));
+        otherMenuStage = new Stage(new FitViewport(400, 600));
     }
 
     private void settingsMenuStageInitialize() {
-        campaignMenuStage = new Stage(new FitViewport(400, 600));
+        settingsMenuStage = new Stage(new FitViewport(400, 600));
     }
 
     private void changeMenu(Stage menuStage) {
