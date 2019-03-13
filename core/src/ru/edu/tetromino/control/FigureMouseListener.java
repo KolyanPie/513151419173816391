@@ -10,6 +10,7 @@ public class FigureMouseListener extends InputListener {
     private boolean dragged;
     private float x;
     private float y;
+    private long timeDown;
 
     public FigureMouseListener(Figure figure) {
         this.figure = figure;
@@ -20,6 +21,7 @@ public class FigureMouseListener extends InputListener {
         this.x = x;
         this.y = y;
         dragged = false;
+        timeDown = System.currentTimeMillis();
         return true;
     }
 
@@ -33,8 +35,10 @@ public class FigureMouseListener extends InputListener {
 
     @Override
     public void touchDragged(InputEvent event, float x, float y, int pointer) {
-        figure.moveBy(x - this.x, y - this.y);
-        dragged = true;
+        if (System.currentTimeMillis() - timeDown > 100) {
+            figure.moveBy(x - this.x, y - this.y);
+            dragged = true;
+        }
         super.touchDragged(event, x, y, pointer);
     }
 }
